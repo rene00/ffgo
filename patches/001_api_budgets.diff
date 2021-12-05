@@ -1,0 +1,936 @@
+--- api_budgets.go	2021-12-05 16:57:34.230182651 +1100
++++ api_budgets.go.new	2021-12-05 16:54:30.118290204 +1100
+@@ -1,8 +1,7 @@
+-
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -12,13 +11,13 @@
+ 
+ import (
+ 	"context"
++	"fmt"
+ 	"io/ioutil"
+ 	"net/http"
+ 	"net/url"
+ 	"strings"
+-	"fmt"
++
+ 	"github.com/antihax/optional"
+-	"time"
+ )
+ 
+ // Linger please
+@@ -27,6 +26,7 @@
+ )
+ 
+ type BudgetsApiService service
++
+ /*
+ BudgetsApiService Delete a budget.
+ Delete a budget. Transactions will not be deleted.
+@@ -40,7 +40,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -87,10 +86,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -98,6 +96,7 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Delete a budget limit.
+ Delete a budget limit.
+@@ -112,7 +111,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -163,10 +161,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -174,28 +171,29 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Get a single budget.
+ Get a single budget. If the start date and end date are submitted as well, the \&quot;spent\&quot; array will be updated accordingly.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the requested budget.
+  * @param optional nil or *BudgetsApiGetBudgetOpts - Optional Parameters:
+-     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. 
+-     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. 
++     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent.
++     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent.
+ @return BudgetSingle
+ */
+ 
+ type BudgetsApiGetBudgetOpts struct {
+-    Start optional.String
+-    End optional.String
++	Start optional.String
++	End   optional.String
+ }
+ 
+ func (a *BudgetsApiService) GetBudget(ctx context.Context, id int32, localVarOptionals *BudgetsApiGetBudgetOpts) (BudgetSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetSingle
+ 	)
+ 
+@@ -248,32 +246,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Get single budget limit.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+@@ -283,10 +282,10 @@
+ */
+ func (a *BudgetsApiService) GetBudgetLimit(ctx context.Context, id int32, limitId int32) (BudgetLimitSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetLimitSingle
+ 	)
+ 
+@@ -340,32 +339,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetLimitSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Lists all attachments of a budget.
+ Lists all attachments.
+@@ -377,15 +377,15 @@
+ */
+ 
+ type BudgetsApiListAttachmentByBudgetOpts struct {
+-    Page optional.Int32
++	Page optional.Int32
+ }
+ 
+ func (a *BudgetsApiService) ListAttachmentByBudget(ctx context.Context, id int32, localVarOptionals *BudgetsApiListAttachmentByBudgetOpts) (AttachmentArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue AttachmentArray
+ 	)
+ 
+@@ -435,55 +435,56 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v AttachmentArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService List all budgets.
+ List all the budgets the user has made. If the start date and end date are submitted as well, the \&quot;spent\&quot; array will be updated accordingly.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *BudgetsApiListBudgetOpts - Optional Parameters:
+      * @param "Page" (optional.Int32) -  Page number. The default pagination is 50.
+-     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. You must submit both start and end. 
+-     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. You must submit both start and end. 
++     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. You must submit both start and end.
++     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD, to get info on how much the user has spent. You must submit both start and end.
+ @return BudgetArray
+ */
+ 
+ type BudgetsApiListBudgetOpts struct {
+-    Page optional.Int32
+-    Start optional.String
+-    End optional.String
++	Page  optional.Int32
++	Start optional.String
++	End   optional.String
+ }
+ 
+ func (a *BudgetsApiService) ListBudget(ctx context.Context, localVarOptionals *BudgetsApiListBudgetOpts) (BudgetArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetArray
+ 	)
+ 
+@@ -538,46 +539,47 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Get list of budget limits by date
+-Get all budget limits for for this date range. 
++Get all budget limits for for this date range.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+- * @param start A date formatted YYYY-MM-DD. 
+- * @param end A date formatted YYYY-MM-DD. 
++ * @param start A date formatted YYYY-MM-DD.
++ * @param end A date formatted YYYY-MM-DD.
+ @return BudgetLimitArray
+ */
+ func (a *BudgetsApiService) ListBudgetLimit(ctx context.Context, start string, end string) (BudgetLimitArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetLimitArray
+ 	)
+ 
+@@ -625,54 +627,55 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetLimitArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Get all limits for a budget.
+-Get all budget limits for this budget and the money spent, and money left. You can limit the list by submitting a date range as well. The \&quot;spent\&quot; array for each budget limit is NOT influenced by the start and end date of your query, but by the start and end date of the budget limit itself. 
++Get all budget limits for this budget and the money spent, and money left. You can limit the list by submitting a date range as well. The \&quot;spent\&quot; array for each budget limit is NOT influenced by the start and end date of your query, but by the start and end date of the budget limit itself.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the requested budget.
+  * @param optional nil or *BudgetsApiListBudgetLimitByBudgetOpts - Optional Parameters:
+-     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD. 
+-     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD. 
++     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD.
++     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD.
+ @return BudgetLimitArray
+ */
+ 
+ type BudgetsApiListBudgetLimitByBudgetOpts struct {
+-    Start optional.String
+-    End optional.String
++	Start optional.String
++	End   optional.String
+ }
+ 
+ func (a *BudgetsApiService) ListBudgetLimitByBudget(ctx context.Context, id int32, localVarOptionals *BudgetsApiListBudgetLimitByBudgetOpts) (BudgetLimitArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetLimitArray
+ 	)
+ 
+@@ -728,32 +731,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetLimitArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService All transactions to a budget.
+ Get all transactions linked to a budget, possibly limited by start and end
+@@ -762,26 +766,26 @@
+  * @param optional nil or *BudgetsApiListTransactionByBudgetOpts - Optional Parameters:
+      * @param "Limit" (optional.Int32) -  Limits the number of results on one page.
+      * @param "Page" (optional.Int32) -  Page number. The default pagination is 50.
+-     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD. 
+-     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD. 
++     * @param "Start" (optional.String) -  A date formatted YYYY-MM-DD.
++     * @param "End" (optional.String) -  A date formatted YYYY-MM-DD.
+      * @param "Type_" (optional.Interface of TransactionTypeFilter) -  Optional filter on the transaction type(s) returned
+ @return TransactionArray
+ */
+ 
+ type BudgetsApiListTransactionByBudgetOpts struct {
+-    Limit optional.Int32
+-    Page optional.Int32
+-    Start optional.String
+-    End optional.String
+-    Type_ optional.Interface
++	Limit optional.Int32
++	Page  optional.Int32
++	Start optional.String
++	End   optional.String
++	Type_ optional.Interface
+ }
+ 
+ func (a *BudgetsApiService) ListTransactionByBudget(ctx context.Context, id int32, localVarOptionals *BudgetsApiListTransactionByBudgetOpts) (TransactionArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue TransactionArray
+ 	)
+ 
+@@ -843,32 +847,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v TransactionArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService List all transactions by a budget limit ID.
+ List all the transactions within one budget limit. The start and end date are dictated by the budget limit.
+@@ -882,16 +887,16 @@
+ */
+ 
+ type BudgetsApiListTransactionByBudgetLimitOpts struct {
+-    Page optional.Int32
+-    Type_ optional.Interface
++	Page  optional.Int32
++	Type_ optional.Interface
+ }
+ 
+ func (a *BudgetsApiService) ListTransactionByBudgetLimit(ctx context.Context, id int32, limitId int32, localVarOptionals *BudgetsApiListTransactionByBudgetLimitOpts) (TransactionArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue TransactionArray
+ 	)
+ 
+@@ -951,32 +956,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v TransactionArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Store a new budget
+ Creates a new budget. The data required can be submitted as a JSON body or as a list of parameters.
+@@ -986,10 +992,10 @@
+ */
+ func (a *BudgetsApiService) StoreBudget(ctx context.Context, body BudgetStore) (BudgetSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Post")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Post")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetSingle
+ 	)
+ 
+@@ -1037,42 +1043,43 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Store new budget limit.
+ Store a new budget limit under this budget.
+@@ -1083,10 +1090,10 @@
+ */
+ func (a *BudgetsApiService) StoreBudgetLimit(ctx context.Context, body BudgetLimitStore, id int32) (BudgetLimitSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Post")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Post")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetLimitSingle
+ 	)
+ 
+@@ -1138,42 +1145,43 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetLimitSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Update existing budget.
+ Update existing budget. This endpoint cannot be used to set budget amount limits.
+@@ -1184,10 +1192,10 @@
+ */
+ func (a *BudgetsApiService) UpdateBudget(ctx context.Context, body BudgetUpdate, id int32) (BudgetSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Put")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Put")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetSingle
+ 	)
+ 
+@@ -1239,42 +1247,43 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ BudgetsApiService Update existing budget limit.
+ Update existing budget limit.
+@@ -1286,10 +1295,10 @@
+ */
+ func (a *BudgetsApiService) UpdateBudgetLimit(ctx context.Context, body BudgetLimit, id int32, limitId int32) (BudgetLimitSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Put")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Put")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue BudgetLimitSingle
+ 	)
+ 
+@@ -1345,36 +1354,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v BudgetLimitSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}

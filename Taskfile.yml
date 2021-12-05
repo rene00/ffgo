@@ -1,0 +1,24 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: build
+      - task: patch
+  build:
+    cmds:
+      - docker-compose up --build
+  patch:
+    cmds:
+      - rm -f model_configuration.go
+      - patch -p0 < patches/001_api_attachments.diff
+      - patch -p0 < patches/001_api_bills.diff
+      - patch -p0 < patches/001_api_budgets.diff
+      - patch -p0 < patches/001_api_categories.diff
+      - patch -p0 < patches/001_api_configuration.diff
+      - patch -p0 < patches/001_api_data.diff
+      - patch -p0 < patches/001_api_preferences.diff
+      - patch -p0 < patches/001_api_users.diff
+      - patch -p0 < patches/001_client.diff

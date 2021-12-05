@@ -1,0 +1,330 @@
+--- api_users.go	2021-12-05 17:18:06.181463087 +1100
++++ api_users.go.new	2021-12-05 17:17:48.713473292 +1100
+@@ -1,8 +1,7 @@
+-
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -12,13 +11,13 @@
+ 
+ import (
+ 	"context"
++	"fmt"
+ 	"io/ioutil"
+ 	"net/http"
+ 	"net/url"
+ 	"strings"
+-	"fmt"
++
+ 	"github.com/antihax/optional"
+-	"time"
+ )
+ 
+ // Linger please
+@@ -27,6 +26,7 @@
+ )
+ 
+ type UsersApiService service
++
+ /*
+ UsersApiService Delete a user.
+ Delete a user. You cannot delete the user you&#x27;re authenticated with. This cannot be undone. Be careful!
+@@ -40,7 +40,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -84,10 +83,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -95,6 +93,7 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ UsersApiService Get a single user.
+ Gets all info of a single user.
+@@ -104,10 +103,10 @@
+ */
+ func (a *UsersApiService) GetUser(ctx context.Context, id int32) (UserSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue UserSingle
+ 	)
+ 
+@@ -154,32 +153,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v UserSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ UsersApiService List all users.
+ List all the users in this instance of Firefly III.
+@@ -190,15 +190,15 @@
+ */
+ 
+ type UsersApiListUserOpts struct {
+-    Page optional.Int32
++	Page optional.Int32
+ }
+ 
+ func (a *UsersApiService) ListUser(ctx context.Context, localVarOptionals *UsersApiListUserOpts) (UserArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue UserArray
+ 	)
+ 
+@@ -247,45 +247,46 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v UserArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ UsersApiService Store a new user
+-Creates a new user. The data required can be submitted as a JSON body or as a list of parameters. The user will be given a random password, which they can reset using the \&quot;forgot password\&quot; function. 
++Creates a new user. The data required can be submitted as a JSON body or as a list of parameters. The user will be given a random password, which they can reset using the \&quot;forgot password\&quot; function.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param body JSON array or key&#x3D;value pairs with the necessary user information. See the model for the exact specifications.
+ @return UserSingle
+ */
+ func (a *UsersApiService) StoreUser(ctx context.Context, body User) (UserSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Post")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Post")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue UserSingle
+ 	)
+ 
+@@ -333,42 +334,43 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v UserSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ UsersApiService Update an existing user&#x27;s information.
+ Update existing user.
+@@ -379,10 +381,10 @@
+ */
+ func (a *UsersApiService) UpdateUser(ctx context.Context, body User, id int32) (UserSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Put")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Put")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue UserSingle
+ 	)
+ 
+@@ -431,36 +433,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v UserSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}

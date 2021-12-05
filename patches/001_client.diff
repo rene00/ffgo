@@ -1,0 +1,44 @@
+--- client.go	2021-12-05 17:21:03.461359520 +1100
++++ client.go.new	2021-12-05 17:20:41.957372084 +1100
+@@ -1,7 +1,7 @@
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -385,17 +385,22 @@
+ }
+ 
+ func (c *APIClient) decode(v interface{}, b []byte, contentType string) (err error) {
+-		if strings.Contains(contentType, "application/xml") {
+-			if err = xml.Unmarshal(b, v); err != nil {
+-				return err
+-			}
+-			return nil
+-		} else if strings.Contains(contentType, "application/json") {
+-			if err = json.Unmarshal(b, v); err != nil {
+-				return err
+-			}
+-			return nil
++	if strings.Contains(contentType, "application/xml") {
++		if err = xml.Unmarshal(b, v); err != nil {
++			return err
++		}
++		return nil
++	} else if strings.Contains(contentType, "application/json") {
++		if err = json.Unmarshal(b, v); err != nil {
++			return err
+ 		}
++		return nil
++	} else if strings.Contains(contentType, "application/vnd.api+json") {
++		if err = json.Unmarshal(b, v); err != nil {
++			return err
++		}
++		return nil
++	}
+ 	return errors.New("undefined response type")
+ }
+ 

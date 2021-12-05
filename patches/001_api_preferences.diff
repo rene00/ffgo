@@ -1,0 +1,299 @@
+--- api_preferences.go	2021-12-05 17:18:05.973463208 +1100
++++ api_preferences.go.new	2021-12-05 17:17:33.353482261 +1100
+@@ -1,8 +1,7 @@
+-
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -12,13 +11,13 @@
+ 
+ import (
+ 	"context"
++	"fmt"
+ 	"io/ioutil"
+ 	"net/http"
+ 	"net/url"
+ 	"strings"
+-	"fmt"
++
+ 	"github.com/antihax/optional"
+-	"time"
+ )
+ 
+ // Linger please
+@@ -27,6 +26,7 @@
+ )
+ 
+ type PreferencesApiService service
++
+ /*
+ PreferencesApiService Return a single preference.
+ Return a single preference and the value.
+@@ -36,10 +36,10 @@
+ */
+ func (a *PreferencesApiService) GetPreference(ctx context.Context, name string) (PreferenceSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue PreferenceSingle
+ 	)
+ 
+@@ -86,32 +86,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v PreferenceSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ PreferencesApiService List all users preferences.
+ List all of the preferences of the user.
+@@ -122,15 +123,15 @@
+ */
+ 
+ type PreferencesApiListPreferenceOpts struct {
+-    Page optional.Int32
++	Page optional.Int32
+ }
+ 
+ func (a *PreferencesApiService) ListPreference(ctx context.Context, localVarOptionals *PreferencesApiListPreferenceOpts) (PreferenceArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue PreferenceArray
+ 	)
+ 
+@@ -179,32 +180,33 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v PreferenceArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ PreferencesApiService Store a new preference for this user.
+ This endpoint creates a new preference. The name and data are free-format, and entirely up to you. If the preference is not used in Firefly III itself it may not be configurable through the user interface, but you can use this endpoint to persist custom data for your own app.
+@@ -214,10 +216,10 @@
+ */
+ func (a *PreferencesApiService) StorePreference(ctx context.Context, body Preference) (PreferenceSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Post")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Post")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue PreferenceSingle
+ 	)
+ 
+@@ -265,42 +267,43 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v PreferenceSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ PreferencesApiService Update preference
+ Update a user&#x27;s preference.
+@@ -311,10 +314,10 @@
+ */
+ func (a *PreferencesApiService) UpdatePreference(ctx context.Context, body PreferenceUpdate, name string) (PreferenceSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Put")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Put")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue PreferenceSingle
+ 	)
+ 
+@@ -363,36 +366,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v PreferenceSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}

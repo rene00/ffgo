@@ -1,0 +1,707 @@
+--- api_data.go	2021-12-05 16:59:40.694108779 +1100
++++ api_data.go.new	2021-12-05 16:49:39.794233316 +1100
+@@ -1,8 +1,7 @@
+-
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -15,7 +14,9 @@
+ 	"io/ioutil"
+ 	"net/http"
+ 	"net/url"
++	"os"
+ 	"strings"
++
+ 	"github.com/antihax/optional"
+ )
+ 
+@@ -25,9 +26,10 @@
+ )
+ 
+ type DataApiService service
++
+ /*
+ DataApiService Bulk update transaction properties. For more information, see https://docs.firefly-iii.org/firefly-iii/api/specials
+-Allows you to update transactions in bulk. 
++Allows you to update transactions in bulk.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param query The JSON query.
+ 
+@@ -38,7 +40,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -82,10 +83,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -93,9 +93,10 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Endpoint to destroy user data
+-A call to this endpoint permanently destroys the requested data type. Use it with care and always with user permission. The demo user is incapable of using this endpoint. 
++A call to this endpoint permanently destroys the requested data type. Use it with care and always with user permission. The demo user is incapable of using this endpoint.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param objects The type of data that you wish to destroy. You can only use one at a time.
+ 
+@@ -106,7 +107,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -150,10 +150,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -161,9 +160,10 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export account data from Firefly III
+-This endpoint allows you to export your accounts from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your accounts from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportAccountsOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -171,15 +171,15 @@
+ */
+ 
+ type DataApiExportAccountsOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportAccounts(ctx context.Context, localVarOptionals *DataApiExportAccountsOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -228,35 +228,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export bills from Firefly III
+-This endpoint allows you to export your bills from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your bills from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportBillsOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -264,15 +265,15 @@
+ */
+ 
+ type DataApiExportBillsOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportBills(ctx context.Context, localVarOptionals *DataApiExportBillsOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -321,35 +322,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export budgets and budget amount data from Firefly III
+-This endpoint allows you to export your budgets and associated budget data from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your budgets and associated budget data from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportBudgetsOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -357,15 +359,15 @@
+ */
+ 
+ type DataApiExportBudgetsOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportBudgets(ctx context.Context, localVarOptionals *DataApiExportBudgetsOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -414,35 +416,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export category data from Firefly III
+-This endpoint allows you to export your categories from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your categories from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportCategoriesOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -450,15 +453,15 @@
+ */
+ 
+ type DataApiExportCategoriesOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportCategories(ctx context.Context, localVarOptionals *DataApiExportCategoriesOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -507,35 +510,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export piggy banks from Firefly III
+-This endpoint allows you to export your piggy banks from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your piggy banks from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportPiggiesOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -543,15 +547,15 @@
+ */
+ 
+ type DataApiExportPiggiesOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportPiggies(ctx context.Context, localVarOptionals *DataApiExportPiggiesOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -600,35 +604,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export recurring transaction data from Firefly III
+-This endpoint allows you to export your recurring transactions from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your recurring transactions from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportRecurringOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -636,15 +641,15 @@
+ */
+ 
+ type DataApiExportRecurringOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportRecurring(ctx context.Context, localVarOptionals *DataApiExportRecurringOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -693,35 +698,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export rule groups and rule data from Firefly III
+-This endpoint allows you to export your rules and rule groups from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your rules and rule groups from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportRulesOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -729,15 +735,15 @@
+ */
+ 
+ type DataApiExportRulesOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportRules(ctx context.Context, localVarOptionals *DataApiExportRulesOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -786,35 +792,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export tag data from Firefly III
+-This endpoint allows you to export your tags from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export your tags from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *DataApiExportTagsOpts - Optional Parameters:
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+@@ -822,15 +829,15 @@
+ */
+ 
+ type DataApiExportTagsOpts struct {
+-    Type_ optional.Interface
++	Type_ optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportTags(ctx context.Context, localVarOptionals *DataApiExportTagsOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -879,55 +886,56 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ DataApiService Export transaction data from Firefly III
+-This endpoint allows you to export transactions from Firefly III into a file. Currently supports CSV exports only. 
++This endpoint allows you to export transactions from Firefly III into a file. Currently supports CSV exports only.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+- * @param start A date formatted YYYY-MM-DD. 
+- * @param end A date formatted YYYY-MM-DD. 
++ * @param start A date formatted YYYY-MM-DD.
++ * @param end A date formatted YYYY-MM-DD.
+  * @param optional nil or *DataApiExportTransactionsOpts - Optional Parameters:
+-     * @param "Accounts" (optional.String) -  Limit the export of transactions to these accounts only. Only asset accounts will be accepted. Other types will be silently dropped. 
++     * @param "Accounts" (optional.String) -  Limit the export of transactions to these accounts only. Only asset accounts will be accepted. Other types will be silently dropped.
+      * @param "Type_" (optional.Interface of ExportFileFilter) -  The file type the export file (CSV is currently the only option).
+ @return *os.File
+ */
+ 
+ type DataApiExportTransactionsOpts struct {
+-    Accounts optional.String
+-    Type_ optional.Interface
++	Accounts optional.String
++	Type_    optional.Interface
+ }
+ 
+ func (a *DataApiService) ExportTransactions(ctx context.Context, start string, end string, localVarOptionals *DataApiExportTransactionsOpts) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -981,26 +989,26 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}

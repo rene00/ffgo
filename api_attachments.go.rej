@@ -1,0 +1,458 @@
+--- api_attachments.go	2021-12-05 16:55:26.138257473 +1100
++++ api_attachments.go.new	2021-12-05 16:49:27.006240789 +1100
+@@ -1,8 +1,7 @@
+-
+ /*
+  * Firefly III API v1.5.4
+  *
+- * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00 
++ * This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the \"Authorize\" button to try the API below. This file was last generated on 2021-09-25T14:21:28+00:00
+  *
+  * API version: 1.5.4
+  * Contact: james@firefly-iii.org
+@@ -12,11 +11,13 @@
+ 
+ import (
+ 	"context"
++	"fmt"
+ 	"io/ioutil"
+ 	"net/http"
+ 	"net/url"
++	"os"
+ 	"strings"
+-	"fmt"
++
+ 	"github.com/antihax/optional"
+ )
+ 
+@@ -26,9 +27,10 @@
+ )
+ 
+ type AttachmentsApiService service
++
+ /*
+ AttachmentsApiService Delete an attachment.
+-With this endpoint you delete an attachment, including any stored file data. 
++With this endpoint you delete an attachment, including any stored file data.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the single.
+ 
+@@ -39,7 +41,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -83,10 +84,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr
+@@ -94,19 +94,20 @@
+ 
+ 	return localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService Download a single attachment.
+-This endpoint allows you to download the binary content of a transaction. It will be sent to you as a download, using the content type \&quot;application/octet-stream\&quot; and content disposition \&quot;attachment; filename&#x3D;example.pdf\&quot;. 
++This endpoint allows you to download the binary content of a transaction. It will be sent to you as a download, using the content type \&quot;application/octet-stream\&quot; and content disposition \&quot;attachment; filename&#x3D;example.pdf\&quot;.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the attachment.
+ @return *os.File
+ */
+ func (a *AttachmentsApiService) DownloadAttachment(ctx context.Context, id int32) (*os.File, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue *os.File
+ 	)
+ 
+@@ -153,45 +154,46 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v *os.File
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService Get a single attachment.
+-Get a single attachment. This endpoint only returns the available metadata for the attachment. Actual file data is handled in two other endpoints (see below). 
++Get a single attachment. This endpoint only returns the available metadata for the attachment. Actual file data is handled in two other endpoints (see below).
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the attachment.
+ @return AttachmentSingle
+ */
+ func (a *AttachmentsApiService) GetAttachment(ctx context.Context, id int32) (AttachmentSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue AttachmentSingle
+ 	)
+ 
+@@ -238,35 +240,36 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v AttachmentSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService List all attachments.
+-This endpoint lists all attachments. 
++This endpoint lists all attachments.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param optional nil or *AttachmentsApiListAttachmentOpts - Optional Parameters:
+      * @param "Page" (optional.Int32) -  Page number. The default pagination is 50.
+@@ -274,15 +277,15 @@
+ */
+ 
+ type AttachmentsApiListAttachmentOpts struct {
+-    Page optional.Int32
++	Page optional.Int32
+ }
+ 
+ func (a *AttachmentsApiService) ListAttachment(ctx context.Context, localVarOptionals *AttachmentsApiListAttachmentOpts) (AttachmentArray, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Get")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Get")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue AttachmentArray
+ 	)
+ 
+@@ -331,45 +334,46 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v AttachmentArray
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService Store a new attachment.
+-Creates a new attachment. The data required can be submitted as a JSON body or as a list of parameters. You cannot use this endpoint to upload the actual file data (see below). This endpoint only creates the attachment object. 
++Creates a new attachment. The data required can be submitted as a JSON body or as a list of parameters. You cannot use this endpoint to upload the actual file data (see below). This endpoint only creates the attachment object.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param body JSON array or key&#x3D;value pairs with the necessary attachment information. See the model for the exact specifications.
+ @return AttachmentSingle
+ */
+ func (a *AttachmentsApiService) StoreAttachment(ctx context.Context, body AttachmentStore) (AttachmentSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Post")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Post")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue AttachmentSingle
+ 	)
+ 
+@@ -417,45 +421,46 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v AttachmentSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService Update existing attachment.
+-Update the meta data for an existing attachment. This endpoint does not allow you to upload or download data. For that, see below. 
++Update the meta data for an existing attachment. This endpoint does not allow you to upload or download data. For that, see below.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param body JSON array with updated attachment information. See the model for the exact specifications.
+  * @param id The ID of the attachment.
+@@ -463,10 +468,10 @@
+ */
+ func (a *AttachmentsApiService) UpdateAttachment(ctx context.Context, body AttachmentUpdate, id int32) (AttachmentSingle, *http.Response, error) {
+ 	var (
+-		localVarHttpMethod = strings.ToUpper("Put")
+-		localVarPostBody   interface{}
+-		localVarFileName   string
+-		localVarFileBytes  []byte
++		localVarHttpMethod  = strings.ToUpper("Put")
++		localVarPostBody    interface{}
++		localVarFileName    string
++		localVarFileBytes   []byte
+ 		localVarReturnValue AttachmentSingle
+ 	)
+ 
+@@ -515,54 +520,55 @@
+ 
+ 	if localVarHttpResponse.StatusCode < 300 {
+ 		// If we succeed, return the data, otherwise pass on to decode error.
+-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-		if err == nil { 
++		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++		if err == nil {
+ 			return localVarReturnValue, localVarHttpResponse, err
+ 		}
+ 	}
+ 
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		if localVarHttpResponse.StatusCode == 200 {
+ 			var v AttachmentSingle
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		if localVarHttpResponse.StatusCode == 422 {
+ 			var v ValidationError
+-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+-				if err != nil {
+-					newErr.error = err.Error()
+-					return localVarReturnValue, localVarHttpResponse, newErr
+-				}
+-				newErr.model = v
++			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
++			if err != nil {
++				newErr.error = err.Error()
+ 				return localVarReturnValue, localVarHttpResponse, newErr
++			}
++			newErr.model = v
++			return localVarReturnValue, localVarHttpResponse, newErr
+ 		}
+ 		return localVarReturnValue, localVarHttpResponse, newErr
+ 	}
+ 
+ 	return localVarReturnValue, localVarHttpResponse, nil
+ }
++
+ /*
+ AttachmentsApiService Upload an attachment.
+-Use this endpoint to upload (and possible overwrite) the file contents of an attachment. Simply put the entire file in the body as binary data. 
++Use this endpoint to upload (and possible overwrite) the file contents of an attachment. Simply put the entire file in the body as binary data.
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param id The ID of the attachment.
+  * @param optional nil or *AttachmentsApiUploadAttachmentOpts - Optional Parameters:
+-     * @param "Body" (optional.Interface of Object) - 
++     * @param "Body" (optional.Interface of Object) -
+ 
+ */
+ 
+ type AttachmentsApiUploadAttachmentOpts struct {
+-    Body optional.Interface
++	Body optional.Interface
+ }
+ 
+ func (a *AttachmentsApiService) UploadAttachment(ctx context.Context, id int32, localVarOptionals *AttachmentsApiUploadAttachmentOpts) (*http.Response, error) {
+@@ -571,7 +577,6 @@
+ 		localVarPostBody   interface{}
+ 		localVarFileName   string
+ 		localVarFileBytes  []byte
+-		
+ 	)
+ 
+ 	// create path and map variables
+@@ -601,8 +606,8 @@
+ 	}
+ 	// body params
+ 	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
+-		
+-		localVarOptionalBody:= localVarOptionals.Body.Value()
++
++		localVarOptionalBody := localVarOptionals.Body.Value()
+ 		localVarPostBody = &localVarOptionalBody
+ 	}
+ 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+@@ -621,10 +626,9 @@
+ 		return localVarHttpResponse, err
+ 	}
+ 
+-
+ 	if localVarHttpResponse.StatusCode >= 300 {
+ 		newErr := GenericSwaggerError{
+-			body: localVarBody,
++			body:  localVarBody,
+ 			error: localVarHttpResponse.Status,
+ 		}
+ 		return localVarHttpResponse, newErr

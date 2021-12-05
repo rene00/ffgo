@@ -1,0 +1,7 @@
+version: '3'
+services:
+  ffgo:
+    build: .
+    network_mode: "bridge"
+    volumes:
+      - ./:/local/out/go
