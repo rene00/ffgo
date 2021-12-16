@@ -14,6 +14,7 @@ tasks:
     cmds:
       - rm -f model_configuration.go
       - patch -p0 < patches/001_api_attachments.diff
+      - patch -p1 < patches/1639605684_api_attachments.diff
       - patch -p0 < patches/001_api_bills.diff
       - patch -p0 < patches/001_api_budgets.diff
       - patch -p0 < patches/001_api_categories.diff

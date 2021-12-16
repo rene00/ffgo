@@ -1,0 +1,15 @@
+diff --git a/api_attachments.go b/api_attachments.go
+index 3b09c4b..df48d4c 100644
+--- a/api_attachments.go
++++ b/api_attachments.go
+@@ -606,9 +606,7 @@ func (a *AttachmentsApiService) UploadAttachment(ctx context.Context, id int32,
+ 	}
+ 	// body params
+ 	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
+-
+-		localVarOptionalBody := localVarOptionals.Body.Value()
+-		localVarPostBody = &localVarOptionalBody
++		localVarPostBody = localVarOptionals.Body.Value()
+ 	}
+ 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+ 	if err != nil {
